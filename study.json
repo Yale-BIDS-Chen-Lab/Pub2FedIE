@@ -1,0 +1,21 @@
+{
+  "models": {
+    "Qwen": {"id": "Qwen/Qwen3.5-9B", "revision": "c202236235762e1c871ad0ccb60c8ee5ba337b9a", "layers": [3,7,11,15,19,23,27,31], "parameters": 3932160},
+    "Llama": {"id": "meta-llama/Llama-3.1-8B-Instruct", "revision": "0e9e39f249a16976918f6564b8830bc894c89659", "layers": [0,4,8,12,16,19,23,27,31], "parameters": 3833856}
+  },
+  "sites": ["MIMIC3","MTSamples","UTP"],
+  "external": "i2b2",
+  "block": [9401,9402,9403],
+  "seed": [9501,9502,9503],
+  "budgets": [30,60,120,240,480],
+  "bootstrap_seed": 20261020,
+  "rank": 16, "alpha": 32, "dropout": 0.05,
+  "projections": ["q_proj","k_proj","v_proj","o_proj"],
+  "public": {"updates": 2000, "lr": 0.00001, "support_units":16, "query_units":16, "views_per_update":3, "inner_lr":0.0001, "worst_weight":0.5, "initial_weight":0.1},
+  "clinical": {"lr":0.0001, "effective_batch":8, "microbatch":1, "validation_rows_per_site":32},
+  "weight_decay":0.01, "clip":1.0, "max_input_tokens":4096, "max_new_tokens":2560, "eval_batch":8,
+  "schemas": {
+    "NER":["problem","test","drug","treatment"],
+    "RE":["bodyloc","condition","course","dosage","duration","form","frequency","labvalue","negation","reference_range","route","severity","strength","subject","temporal","uncertain"]
+  }
+}

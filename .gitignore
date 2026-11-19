@@ -1,0 +1,9 @@
+*
+!*/
+!/.gitignore
+!/README.md
+!/requirements.txt
+!/study.json
+!/LICENSE
+!/pub2fedie/*.py
+!/pub2fedie/core/*.py

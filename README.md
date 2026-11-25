@@ -1,6 +1,6 @@
 # Pub2FedIE
 
-Code for *Public biomedical adapter preparation improves federated clinical information extraction with less local training and communication*. The tasks are named-entity recognition (NER) and conditional relation extraction (RE).
+Code for *Pub2FedIE: Public biomedical adapter preparation for efficient federated clinical information extraction with large language models*. The tasks are named-entity recognition (NER) and conditional relation extraction (RE).
 
 ## Install
 
@@ -89,22 +89,7 @@ Set public training length with `--updates`. Private `--steps` is the total opti
 | No-Public | Skip public preparation and omit `--public`; fit fresh client adapters. |
 | SFT-Cont / Meta-Cont | Each client updates its copy of the public adapter; the server aggregates the updated adapters. |
 | SFT-Res / Meta-Res | Freeze the public adapter and fit a new residual. For Meta-Res and Meta-Cont, use `--preparation Meta`. |
-| Meta with simulated continuation | During public preparation, simulated clients update copies of the shared adapter. The query loss updates the initialization through rank-16 aggregation. Clinical clients then continue the prepared adapter (Qwen NER, Table S3). |
 | Fed-MedLoRA+ | Fit fresh adapters; weight their A/B factors using the [released validation-loss rule](https://github.com/Yale-BIDS-Chen-Lab/FL_LLM_Med/tree/f8d4821021303463990d76b9844f38003296fafa). |
-
-To run the Table S3 ablation, use the same name for preparation and adaptation:
-
-```bash
-method="Meta with simulated continuation"
-python -m pub2fedie.prepare --model Qwen --snapshot "$MODEL" --corpora "$PUBLIC" \
-  --preparation "$method" --block "$block" --out "$RUN/simulated-public-$block"
-python -m pub2fedie.adapt --model Qwen --snapshot "$MODEL" --clinical "$CLINICAL" \
-  --task NER --method "$method" --public "$RUN/simulated-public-$block/public.pt" \
-  --block "$block" --seed "$seed" --rounds 1 --steps 480 --save-steps 30 60 120 240 \
-  --out "$RUN/fits/$method/$block/$seed"
-```
-
-Evaluate each budget with `--checkpoint`: use `step30/r1_global.pt` (likewise for 60, 120 and 240) or `r1_global.pt` for 480, relative to that fit's output directory.
 
 Fed validation uses distinct training examples held out from client fitting. Set the number per site with `--panel-size N` (default 32), or pass a site-to-index map with `--panel indices.json` (zero-based train-row indices). By default, the panel excludes examples used in that run. To reproduce the paper's shared panel across budgets, use `--panel-exclude-steps 480`; use 60 for the original RE60 fixed-client ablation.
 
